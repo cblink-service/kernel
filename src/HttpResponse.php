@@ -1,7 +1,6 @@
 <?php
 namespace Cblink\Service\Kennel;
 
-use ArrayAccess;
 use Cblink\Service\Kennel\Exceptions\HttpRequestException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
@@ -11,43 +10,46 @@ use Psr\Http\Message\ResponseInterface;
  * Class HttpResponse
  * @package Cblink\Service\Kennel
  */
-class HttpResponse implements ArrayAccess, Arrayable
+class HttpResponse implements Arrayable
 {
-    /**
-     * @var boolean
-     */
-    protected $success;
-
-    /**
-     * @var int
-     */
-    protected $errCode;
-
-    /**
-     * @var string
-     */
-    protected $errMsg;
-
     /**
      * @var array
      */
     protected $data = [];
 
+    /**
+     * @var string
+     */
+    protected $origin;
+
+    /**
+     * @var array
+     */
+    protected $headers = [];
+
     public function __construct(ResponseInterface $response)
+    {
+        $this->validate($response);
+
+        $this->headers = $response->getHeaders();
+    }
+
+    /**
+     * @param ResponseInterface $response
+     */
+    public function validate($response)
     {
         if($response->getStatusCode() !== 200) {
             throw new HttpRequestException('请求错误：'.$response->getStatusCode());
         }
 
-        $data = json_decode($response->getBody()->getContents(), true);
-        if (!is_array($data)){
-            throw new HttpRequestException('请求错误，返回内容为：'.$data);
-        }
+        $this->origin = $response->getBody()->getContents();
 
-        $this->success = Arr::get($data, 'err_code') === 0;
-        $this->errCode = Arr::get($data, 'err_code');
-        $this->errMsg = Arr::get($data, 'msg');
-        $this->data = Arr::get($data, 'data', []);
+        $this->data = json_decode($this->origin, true);
+
+        if (!is_array($this->data)){
+            throw new HttpRequestException('请求错误，返回内容为：'.$this->data);
+        }
     }
 
     /**
@@ -55,7 +57,7 @@ class HttpResponse implements ArrayAccess, Arrayable
      */
     public function success()
     {
-        return $this->success;
+        return Arr::get($this->data, 'err_code') === 0;
     }
 
     /**
@@ -63,7 +65,7 @@ class HttpResponse implements ArrayAccess, Arrayable
      */
     public function errCode()
     {
-        return $this->errCode;
+        return Arr::get($this->data, 'err_code');
     }
 
     /**
@@ -71,42 +73,56 @@ class HttpResponse implements ArrayAccess, Arrayable
      */
     public function errMsg()
     {
-        return $this->errMsg;
+        return Arr::get($this->data, 'err_msg', 'invalid error');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function meta()
+    {
+        return Arr::get($this->data, 'meta', []);
     }
 
     /**
      * @return array|mixed
      */
-    public function data()
+    public function all()
     {
-        return $this->data;
+        return Arr::get($this->data, 'data', []);
     }
 
-    public function offsetExists($offset)
+    /**
+     * @return string
+     */
+    public function origin()
     {
-        return array_key_exists($offset, $this->data);
+        return $this->origin;
     }
 
-    public function offsetGet($offset)
+    /**
+     * @return array|\string[][]
+     */
+    public function headers() : array
     {
-        if($this->offsetExists($offset)){
-            return $this->data[$offset];
-        }
-        return "";
+        return $this->headers;
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        return Arr::get($this->data, $key, $default);
+    }
+
+    /**
+     * @return array|mixed
+     */
     public function toArray()
     {
-        return $this->data;
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        // TODO: Implement offsetSet() method.
-    }
-
-    public function offsetUnset($offset)
-    {
-        // TODO: Implement offsetUnset() method.
+        return $this->all();
     }
 }

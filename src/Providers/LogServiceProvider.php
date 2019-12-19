@@ -1,9 +1,10 @@
 <?php
 namespace Cblink\Service\Kennel\Providers;
 
-use Cblink\Service\Kennel\Interfaces\ServiceProviderInterface;
 use Cblink\Service\Kennel\LogManager;
 use Cblink\Service\Kennel\ServiceContainer;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Class LogServiceProvider
@@ -11,10 +12,14 @@ use Cblink\Service\Kennel\ServiceContainer;
  */
 class LogServiceProvider implements ServiceProviderInterface
 {
-    public function register(ServiceContainer $app)
+    protected $name = 'logger';
+
+    public function register(Container $app)
     {
-        $app['logger'] = function (ServiceContainer $app) {
-            return new LogManager($app);
-        };
+        if (!$app->offsetExists($this->name)){
+            $app[$this->name] = function (ServiceContainer $app) {
+                return new LogManager($app);
+            };
+        }
     }
 }
