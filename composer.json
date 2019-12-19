@@ -1,0 +1,24 @@
+{
+    "name": "cblink-service/kernel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nick",
+            "email": "i@httpd.cc"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "pimple/pimple": "^3.2",
+        "illuminate/config": "^6.8",
+        "monolog/monolog": "^2.0",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cblink\\Service\\Kennel\\": "src/"
+        }
+    }
+}
