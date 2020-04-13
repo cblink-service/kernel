@@ -18,7 +18,11 @@ class HttpClientServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         $app['http_client'] = function(ServiceContainer $app){
-            return new Client($app->config->get('request', []));
+            return new Client($app->config->get('request', [
+                'timeout' => 5,
+                'http_errors' => false,
+                'verify' => false,
+            ]));
         };
     }
 }

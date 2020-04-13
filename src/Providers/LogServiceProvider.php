@@ -16,7 +16,19 @@ class LogServiceProvider implements ServiceProviderInterface
 
     public function register(Container $app)
     {
+        /** @var ServiceContainer $app **/
         if (!$app->offsetExists($this->name)){
+            $app->setConfig(array_merge([// 日志配置
+                'log' => [
+                    'default' => 'single',
+                    'channels' => [
+                        'single' => [
+                            'driver' => 'single',
+                            'path' => \sys_get_temp_dir().'/logs/cblink-service.log',
+                            'level' => 'debug',
+                        ],
+                    ],
+                ]], $app->config->all()));
             $app[$this->name] = function (ServiceContainer $app) {
                 return new LogManager($app);
             };

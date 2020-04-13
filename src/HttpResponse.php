@@ -115,7 +115,7 @@ class HttpResponse implements Arrayable
      */
     public function get($key, $default = null)
     {
-        return Arr::get($this->data, $key, $default);
+        return Arr::get($this->data, 'data.' . $key, $default);
     }
 
     /**
