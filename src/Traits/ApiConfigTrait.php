@@ -8,7 +8,7 @@ trait ApiConfigTrait
      */
     protected function isPrivate() : bool
     {
-        return $this->getApp()->config('config.private', false);
+        return $this->getApp()->config('private', false);
     }
 
     /**
@@ -17,7 +17,7 @@ trait ApiConfigTrait
     protected function baseUrl() : string
     {
         return $this->isPrivate() ?
-            $this->getApp()->config('config.base_url', 'http://127.0.0.1/') :
+            $this->getApp()->config('base_url', 'http://127.0.0.1/') :
             $this->getApp()->baseUrl();
     }
 
@@ -26,7 +26,7 @@ trait ApiConfigTrait
      */
     protected function getAppId() : string
     {
-        return $this->getApp()->config('config.app_id', '');
+        return $this->getApp()->config('app_id', '');
     }
 
     /**
@@ -34,7 +34,7 @@ trait ApiConfigTrait
      */
     protected function getKey() : string
     {
-        return $this->getApp()->config('config.key', '');
+        return $this->getApp()->config('key', '');
     }
 
     /**
@@ -42,6 +42,6 @@ trait ApiConfigTrait
      */
     protected function getSecret() : string
     {
-        return $this->getApp()->config('config.secret', '');
+        return $this->getApp()->config('secret', '');
     }
 }

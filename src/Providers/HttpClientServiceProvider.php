@@ -3,11 +3,8 @@ namespace Cblink\Service\Kennel\Providers;
 
 use Cblink\Service\Kennel\ServiceContainer;
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * Class HttpClientServiceProvider
