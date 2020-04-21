@@ -1,4 +1,5 @@
 <?php
+
 namespace Cblink\Service\Kennel\Traits;
 
 trait ApiConfigTrait
@@ -6,7 +7,7 @@ trait ApiConfigTrait
     /**
      * @return bool
      */
-    protected function isPrivate() : bool
+    protected function isPrivate(): bool
     {
         return $this->getApp()->config('private', false);
     }
@@ -14,7 +15,7 @@ trait ApiConfigTrait
     /**
      * @return string
      */
-    protected function baseUrl() : string
+    protected function baseUrl(): string
     {
         return $this->isPrivate() ?
             $this->getApp()->config('base_url', 'http://127.0.0.1/') :
@@ -24,7 +25,7 @@ trait ApiConfigTrait
     /**
      * @return string
      */
-    protected function getAppId() : string
+    protected function getAppId(): string
     {
         return $this->getApp()->config('app_id', '');
     }
@@ -32,7 +33,7 @@ trait ApiConfigTrait
     /**
      * @return string
      */
-    protected function getKey() : string
+    protected function getKey(): string
     {
         return $this->getApp()->config('key', '');
     }
@@ -40,7 +41,7 @@ trait ApiConfigTrait
     /**
      * @return string
      */
-    protected function getSecret() : string
+    protected function getSecret(): string
     {
         return $this->getApp()->config('secret', '');
     }

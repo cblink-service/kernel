@@ -1,18 +1,20 @@
 <?php
+
 namespace Cblink\Service\Kennel;
 
+use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
+use Monolog\Logger as Monolog;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
-use Monolog\Handler\FormattableHandlerInterface;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\SlackWebhookHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogHandler;
 use Monolog\Handler\WhatFailureGroupHandler;
-use Monolog\Logger as Monolog;
-use Psr\Log\LoggerInterface;
+use Monolog\Handler\FormattableHandlerInterface;
+
 /**
  * Class LogManager.
  *
@@ -118,6 +120,7 @@ class LogManager implements LoggerInterface
             $logger->emergency('Unable to create configured logger. Using emergency logger.', [
                 'exception' => $e,
             ]);
+
             return $logger;
         }
     }
@@ -139,10 +142,11 @@ class LogManager implements LoggerInterface
         if (isset($this->customCreators[$config['driver']])) {
             return $this->callCustomCreator($config);
         }
-        $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
+        $driverMethod = 'create' . ucfirst($config['driver']) . 'Driver';
         if (method_exists($this, $driverMethod)) {
             return $this->{$driverMethod}($config);
         }
+
         throw new InvalidArgumentException(\sprintf('Driver [%s] is not supported.', $config['driver']));
     }
     /**
@@ -155,7 +159,7 @@ class LogManager implements LoggerInterface
     protected function createEmergencyLogger()
     {
         return new Monolog('CblinkService', $this->prepareHandlers([new StreamHandler(
-            \sys_get_temp_dir().'/cblink-service/debug.log',
+            \sys_get_temp_dir() . '/cblink-service/debug.log',
             $this->level(['level' => 'debug'])
         )]));
     }
@@ -188,6 +192,7 @@ class LogManager implements LoggerInterface
         if ($config['ignore_exceptions'] ?? false) {
             $handlers = [new WhatFailureGroupHandler($handlers)];
         }
+
         return new Monolog($this->parseChannel($config), $handlers);
     }
     /**
@@ -302,6 +307,7 @@ class LogManager implements LoggerInterface
         foreach ($handlers as $key => $handler) {
             $handlers[$key] = $this->prepareHandler($handler);
         }
+
         return $handlers;
     }
     /**
@@ -318,6 +324,7 @@ class LogManager implements LoggerInterface
                 $handler->setFormatter($this->formatter());
             }
         }
+
         return $handler;
     }
     /**
@@ -329,6 +336,7 @@ class LogManager implements LoggerInterface
     {
         $formatter = new LineFormatter(null, null, true, true);
         $formatter->includeStacktraces();
+
         return $formatter;
     }
     /**
@@ -357,6 +365,7 @@ class LogManager implements LoggerInterface
         if (isset($this->levels[$level])) {
             return $this->levels[$level];
         }
+
         throw new InvalidArgumentException('Invalid log level.');
     }
     /**
@@ -388,6 +397,7 @@ class LogManager implements LoggerInterface
     public function extend($driver, \Closure $callback)
     {
         $this->customCreators[$driver] = $callback->bindTo($this, $this);
+
         return $this;
     }
     /**

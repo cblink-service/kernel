@@ -21,5 +21,16 @@
         "psr-4": {
             "Cblink\\Service\\Kennel\\": "src/"
         }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "scripts": {
+        "check-style": [
+            "./vendor/bin/php-cs-fixer fix --using-cache=no --diff --config=.php_cs --dry-run --ansi"
+        ],
+        "fix-style": [
+            "./vendor/bin/php-cs-fixer fix --using-cache=no --config=.php_cs --ansi"
+        ]
     }
 }

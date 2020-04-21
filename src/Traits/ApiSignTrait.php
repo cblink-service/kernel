@@ -1,9 +1,10 @@
 <?php
+
 namespace Cblink\Service\Kennel\Traits;
 
-use Cblink\Service\Kennel\ServiceContainer;
-use Illuminate\Support\Arr;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Arr;
+use Cblink\Service\Kennel\ServiceContainer;
 
 /**
  * Trait BuildSignTrait
@@ -34,7 +35,7 @@ trait ApiSignTrait
      * @return array
      * @throws \Exception
      */
-    protected function buildGatewaySign(string $uri, string $method, array $options = []) : array
+    protected function buildGatewaySign(string $uri, string $method, array $options = []): array
     {
         $contentType = isset($options['json']) ? 'application/json' : '';
 
@@ -50,7 +51,7 @@ trait ApiSignTrait
 
         $params = $this->sortByArray($options['query'] ?? []);
 
-        $buildUrl = '/' . (empty($params) ? $uri : ($uri . '?'. urldecode(http_build_query($params))));
+        $buildUrl = '/' . (empty($params) ? $uri : ($uri . '?' . urldecode(http_build_query($params))));
 
         $headers = Arr::except($options['headers'], [
             'X-Ca-Signature', 'Accept', 'Content-MD5', 'Content-Type', 'Date', 'X-Ca-Signature-Headers'
@@ -58,15 +59,15 @@ trait ApiSignTrait
         ksort($headers);
 
         $headerString = "";
-        foreach ($headers as $key => $val){
-            $headerString .= $key.':'.$val."\n";
+        foreach ($headers as $key => $val) {
+            $headerString .= $key . ':' . $val . "\n";
         }
 
         $content = empty($options['json']) ? '' : base64_encode(md5(json_encode($options['json']), true));
 
         $signString = $method . "\n" .
             $options['headers']['Accept'] . "\n" .
-            $content."\n" .
+            $content . "\n" .
             $options['headers']['Content-Type'] . "\n" .
             $date . "\n" .
             (empty($headerString) ? "\n" : $headerString) .
@@ -88,15 +89,15 @@ trait ApiSignTrait
      * @return array
      * @throws \Exception
      */
-    protected function buildPrivateSign(string $uri, string $method, array $options = []) : array
+    protected function buildPrivateSign(string $uri, string $method, array $options = []): array
     {
         $params = $this->sortByArray($options['query'] ?? []);
 
-        $buildUrl = '/' . (empty($params) ? $uri : $uri . '?'. urldecode(http_build_query($params)));
+        $buildUrl = '/' . (empty($params) ? $uri : $uri . '?' . urldecode(http_build_query($params)));
 
         $content = empty($options['json']) ? '' : base64_encode(md5(json_encode($options['json']), true));
 
-        $signString = $method."\n".$content."\nx-ca-proxy-signature-secret-key:".$this->getKey()."\n".$buildUrl;
+        $signString = $method . "\n" . $content . "\nx-ca-proxy-signature-secret-key:" . $this->getKey() . "\n" . $buildUrl;
 
         $signature = base64_encode(hash_hmac('sha256', $signString, $this->getSecret(), true));
 
@@ -115,14 +116,15 @@ trait ApiSignTrait
      * @param array $array
      * @return array
      */
-    protected function sortByArray(array $array = []) : array
+    protected function sortByArray(array $array = []): array
     {
-        foreach ($array as $key => $val){
-            if (is_array($val)){
+        foreach ($array as $key => $val) {
+            if (is_array($val)) {
                 $array[$key] = $this->sortByArray($val);
             }
         }
         ksort($array);
+
         return $array;
     }
 }

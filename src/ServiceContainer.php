@@ -1,12 +1,13 @@
 <?php
+
 namespace Cblink\Service\Kennel;
 
-use Cblink\Service\Kennel\Providers\HttpClientServiceProvider;
-use Cblink\Service\Kennel\Providers\LogServiceProvider;
+use Closure;
+use Pimple\Container;
 use GuzzleHttp\Client;
 use Illuminate\Config\Repository as Config;
-use Pimple\Container;
-use Closure;
+use Cblink\Service\Kennel\Providers\LogServiceProvider;
+use Cblink\Service\Kennel\Providers\HttpClientServiceProvider;
 
 /**
  * Class ServiceContainer
@@ -88,16 +89,17 @@ abstract class ServiceContainer extends Container
     /**
      * @return array
      */
-    abstract protected function getCustomProviders() : array ;
+    abstract protected function getCustomProviders(): array ;
 
     /**
      * @return Client
      */
     public function getClient()
     {
-        if (!$this->offsetExists('http_client')){
-            parent::register(new HttpClientServiceProvider);
+        if (!$this->offsetExists('http_client')) {
+            parent::register(new HttpClientServiceProvider());
         }
+
         return $this->http_client;
     }
 
@@ -107,7 +109,7 @@ abstract class ServiceContainer extends Container
      */
     public function rebind($name, Closure $closure)
     {
-        if($this->offsetExists($name)){
+        if ($this->offsetExists($name)) {
             $this->offsetUnset($name);
         }
 

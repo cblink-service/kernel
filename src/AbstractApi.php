@@ -1,9 +1,10 @@
 <?php
+
 namespace Cblink\Service\Kennel;
 
+use Cblink\Service\Kennel\Traits\ApiRequest;
 use Cblink\Service\Kennel\Traits\ApiSignTrait;
 use Cblink\Service\Kennel\Traits\ApiConfigTrait;
-use Cblink\Service\Kennel\Traits\ApiRequest;
 
 /**
  * Class AbstractApi
@@ -34,7 +35,7 @@ abstract class AbstractApi
      * @return HttpResponse
      * @throws \Exception
      */
-    protected function request(string $uri, string $method, array $options = []) : HttpResponse
+    protected function request(string $uri, string $method, array $options = []): HttpResponse
     {
         $method = strtoupper($method);
 
@@ -57,7 +58,7 @@ abstract class AbstractApi
      * @param string $uri
      * @return string
      */
-    protected function url($uri = '') : string
+    protected function url($uri = ''): string
     {
         return  $this->baseUrl() . ltrim($uri, '/');
     }

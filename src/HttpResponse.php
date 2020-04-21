@@ -1,16 +1,18 @@
 <?php
+
 namespace Cblink\Service\Kennel;
 
-use Cblink\Service\Kennel\Exceptions\HttpRequestException;
-use Illuminate\Contracts\Support\Arrayable;
+use Serializable;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
+use Illuminate\Contracts\Support\Arrayable;
+use Cblink\Service\Kennel\Exceptions\HttpRequestException;
 
 /**
  * Class HttpResponse
  * @package Cblink\Service\Kennel
  */
-class HttpResponse implements Arrayable
+class HttpResponse implements Arrayable, Serializable
 {
     /**
      * @var array
@@ -23,33 +25,34 @@ class HttpResponse implements Arrayable
     protected $origin;
 
     /**
-     * @var array
+     * @var ResponseInterface
      */
-    protected $headers = [];
+    protected $response;
 
     public function __construct(ResponseInterface $response)
     {
-        $this->validate($response);
+        $this->response = $response;
 
-        $this->headers = $response->getHeaders();
+        $this->validated();
     }
 
-    /**
-     * @param ResponseInterface $response
-     */
-    public function validate($response)
+    public function validated()
     {
-        if($response->getStatusCode() !== 200) {
-            throw new HttpRequestException('请求错误：'.$response->getStatusCode());
+        $response = $this->response;
+
+        if ($response->getStatusCode() !== 200) {
+            throw new HttpRequestException('请求错误：' . $response->getStatusCode());
         }
 
         $this->origin = $response->getBody()->getContents();
 
         $this->data = json_decode($this->origin, true);
 
-        if (!is_array($this->data)){
-            throw new HttpRequestException('请求错误，返回内容为：'.$this->data);
+        if (!is_array($this->data)) {
+            throw new HttpRequestException('请求错误，返回内容为：' . $this->data);
         }
+
+        return true;
     }
 
     /**
@@ -103,9 +106,9 @@ class HttpResponse implements Arrayable
     /**
      * @return array|\string[][]
      */
-    public function headers() : array
+    public function headers(): array
     {
-        return $this->headers;
+        return $this->response->getHeaders();
     }
 
     /**
@@ -124,5 +127,21 @@ class HttpResponse implements Arrayable
     public function toArray()
     {
         return $this->all();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function serialize()
+    {
+        return serialize($this->data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unserialize($serialized)
+    {
+        return $this->data = unserialize($serialized);
     }
 }

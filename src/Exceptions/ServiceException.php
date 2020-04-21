@@ -1,4 +1,5 @@
 <?php
+
 namespace Cblink\Service\Kennel\Exceptions;
 
 use InvalidArgumentException;

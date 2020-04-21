@@ -1,4 +1,5 @@
 <?php
+
 namespace Cblink\Service\Kennel\Traits;
 
 use Cblink\Service\Kennel\HttpResponse;

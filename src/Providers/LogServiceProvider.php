@@ -1,10 +1,11 @@
 <?php
+
 namespace Cblink\Service\Kennel\Providers;
 
-use Cblink\Service\Kennel\LogManager;
-use Cblink\Service\Kennel\ServiceContainer;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Cblink\Service\Kennel\LogManager;
+use Cblink\Service\Kennel\ServiceContainer;
 
 /**
  * Class LogServiceProvider
@@ -17,14 +18,14 @@ class LogServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         /** @var ServiceContainer $app **/
-        if (!$app->offsetExists($this->name)){
+        if (!$app->offsetExists($this->name)) {
             $app->setConfig(array_merge([// 日志配置
                 'log' => [
                     'default' => 'single',
                     'channels' => [
                         'single' => [
                             'driver' => 'single',
-                            'path' => \sys_get_temp_dir().'/logs/cblink-service.log',
+                            'path' => \sys_get_temp_dir() . '/logs/cblink-service.log',
                             'level' => 'debug',
                         ],
                     ],
