@@ -135,7 +135,7 @@ class LogManager implements LoggerInterface
      */
     protected function resolve($name)
     {
-        $config = $this->app['config']->get(\sprintf('log.channels.%s', $name));
+        $config = $this->app->config->get(\sprintf('log.channels.%s', $name));
         if (is_null($config)) {
             throw new InvalidArgumentException(\sprintf('Log [%s] is not defined.', $name));
         }
@@ -375,7 +375,7 @@ class LogManager implements LoggerInterface
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['log.default'];
+        return $this->app->config->get('log.default');
     }
     /**
      * Set the default log driver name.
@@ -384,7 +384,7 @@ class LogManager implements LoggerInterface
      */
     public function setDefaultDriver($name)
     {
-        $this->app['config']['log.default'] = $name;
+        $this->app->config->set('log.default', $name);
     }
     /**
      * Register a custom driver creator Closure.
