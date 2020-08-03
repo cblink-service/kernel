@@ -60,6 +60,6 @@ abstract class AbstractApi
      */
     protected function url($uri = ''): string
     {
-        return  $this->baseUrl() . ltrim($uri, '/');
+        return rtrim($this->baseUrl()) . '/' . ltrim($uri, '/');
     }
 }
