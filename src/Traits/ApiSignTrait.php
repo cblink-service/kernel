@@ -93,11 +93,24 @@ trait ApiSignTrait
     {
         $params = $this->sortByArray($options['query'] ?? []);
 
-        $buildUrl = '/' . (empty($params) ? $uri : $uri . '?' . urldecode(http_build_query($params)));
+        // url
+        $uri = '/' . ltrim($uri, '/');
 
-        $content = empty($options['json']) ? '' : base64_encode(md5(json_encode($options['json']), true));
+        // 内容默认为空
+        $content = '';
 
-        $signString = $method . "\n" . $content . "\nx-ca-proxy-signature-secret-key:" . $this->getKey() . "\n" . $buildUrl;
+        if (!empty($params)) {
+            $uri .= '?' . urldecode(http_build_query($params));
+        }
+
+        if (!empty($options['json'])) {
+            $content = base64_encode(md5(json_encode($options['json']), true));
+        }
+
+        $signString = $method . "\n" .
+            $content . "\n" .
+            "x-ca-proxy-signature-secret-key:" . $this->getKey() . "\n" .
+            $uri;
 
         $signature = base64_encode(hash_hmac('sha256', $signString, $this->getSecret(), true));
 
