@@ -132,7 +132,7 @@ trait ApiSignTrait
     protected function sortByArray(array $array = []): array
     {
         $array = array_filter($array, function ($val) {
-            return !is_null($val) && $val != "";
+            return !is_null($val) && $val !== "";
         });
 
         foreach ($array as $key => $val) {
