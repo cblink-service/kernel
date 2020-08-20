@@ -2,6 +2,7 @@
 
 namespace Cblink\Service\Kennel;
 
+use Cblink\Service\Kennel\Providers\RequestServiceProvider;
 use Closure;
 use Pimple\Container;
 use GuzzleHttp\Client;
@@ -82,7 +83,8 @@ abstract class ServiceContainer extends Container
     {
         return array_merge([
             LogServiceProvider::class,
-            HttpClientServiceProvider::class
+            HttpClientServiceProvider::class,
+            RequestServiceProvider::class,
         ], $this->getCustomProviders());
     }
 
