@@ -2,18 +2,20 @@
 
 namespace Cblink\Service\Kennel;
 
-use Cblink\Service\Kennel\Providers\RequestServiceProvider;
 use Closure;
 use Pimple\Container;
 use GuzzleHttp\Client;
 use Illuminate\Config\Repository as Config;
+use Symfony\Component\HttpFoundation\Request;
 use Cblink\Service\Kennel\Providers\LogServiceProvider;
+use Cblink\Service\Kennel\Providers\RequestServiceProvider;
 use Cblink\Service\Kennel\Providers\HttpClientServiceProvider;
 
 /**
  * Class ServiceContainer
- * @property LogManager $logger
- * @property Client $http_client
+ * @property LogManager         $logger
+ * @property Client             $http_client
+ * @property Request            $request
  * @package Cblink\Service\Kennel
  */
 abstract class ServiceContainer extends Container
