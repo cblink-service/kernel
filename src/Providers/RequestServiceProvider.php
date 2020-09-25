@@ -12,7 +12,7 @@ class RequestServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $pimple)
     {
-        $app['http_client'] = function (ServiceContainer $app) {
+        $app['request'] = function (ServiceContainer $app) {
             return Request::createFromGlobals();
         };
     }
