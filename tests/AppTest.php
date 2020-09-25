@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Cblink\Service\Kennel\ServiceContainer;
+use Symfony\Component\HttpFoundation\Request;
 
 class AppTest extends TestCase
 {
@@ -11,6 +12,13 @@ class AppTest extends TestCase
         $app = new Application([]);
 
         $this->assertInstanceOf(ServiceContainer::class, $app);
+    }
+
+    public function testRequest()
+    {
+        $app = new Application([]);
+
+        $this->assertInstanceOf(Request::class, $app->request);
     }
 
     public function testLog()

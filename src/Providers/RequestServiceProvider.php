@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Cblink\Service\Kennel\Providers;
 
 use Pimple\Container;
@@ -10,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $pimple)
+    public function register(Container $app)
     {
         $app['request'] = function (ServiceContainer $app) {
             return Request::createFromGlobals();

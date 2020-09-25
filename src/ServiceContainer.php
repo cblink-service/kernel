@@ -93,7 +93,21 @@ abstract class ServiceContainer extends Container
     /**
      * @return array
      */
-    abstract protected function getCustomProviders(): array ;
+    abstract protected function getCustomProviders(): array;
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        if (!$this->offsetExists('request')) {
+            $this->offsetSet('request', function(){
+                return Request::createFromGlobals();
+            });
+        }
+
+        return $this->offsetGet('request');
+    }
 
     /**
      * @return Client
