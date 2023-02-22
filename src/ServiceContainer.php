@@ -101,7 +101,7 @@ abstract class ServiceContainer extends Container
     public function getRequest()
     {
         if (!$this->offsetExists('request')) {
-            $this->offsetSet('request', function(){
+            $this->offsetSet('request', function () {
                 return Request::createFromGlobals();
             });
         }
